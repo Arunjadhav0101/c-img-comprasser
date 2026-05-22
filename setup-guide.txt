@@ -24,7 +24,7 @@ This guide will walk you through setting up the Cloud-Native Image Compressor fr
    - Key: `OUTPUT_BUCKET`, Value: `image-compressor-output-YOURNAME`
 6. Under "Configuration" -> "General configuration", increase Timeout to 1 minute and Memory to 256MB.
 7. Click "Deploy".
-8. **Add Pillow (PIL) Layer:** Since the Lambda needs Pillow to process images, scroll to the bottom of the function overview, click "Add a layer", provide the ARN for a public Pillow layer matching your Python version, or upload the zip file.
+8. **No Layers Required:** Image resizing is handled client-side, so you do NOT need Pillow or any AWS layers!
 9. **Add S3 Trigger:** On the function overview, click "Add trigger", select S3, choose your Input Bucket, and set Event type to `All object create events`. Save.
 
 ## Step 4: Create the API Lambda Function
@@ -58,6 +58,6 @@ This guide will walk you through setting up the Cloud-Native Image Compressor fr
 ## Step 8: Test Your Application
 1. Open your S3 Bucket Website Endpoint URL in your browser.
 2. Upload an image.
-3. Verify that the frontend gets the presigned URL, uploads it to the S3 Input Bucket, which triggers the Processor Lambda.
-4. The Processor Lambda compresses it and puts it in the Output Bucket.
-5. The frontend polls or retrieves the compressed image via API Gateway and shows the final result!
+3. Verify that the frontend resizes the image locally, gets the presigned URLs, and uploads the smaller versions directly to the S3.
+4. The S3 uploads trigger the Processor Lambda (acting as a logger).
+5. The frontend immediately shows the final results!

@@ -78,10 +78,8 @@ This function is triggered automatically when a new image is uploaded to the Inp
 7. **Add the code:**
    - Under the **Code** tab, copy the contents of `lambda/Lambda code.py` from this repository and paste it into `lambda_function.py`.
    - Click **Deploy**.
-8. **Add Pillow (PIL) Layer:**
-   - Image processing requires the Pillow library. Scroll to the bottom of the Lambda page to the **Layers** section and click **Add a layer**.
-   - You can either upload a custom Pillow zip file (via Custom layers) or specify an ARN for a public Pillow layer that matches your AWS Region and Python runtime.
-   - Click **Add**.
+8. **No Layers Required:**
+   - Because image resizing is now handled efficiently by the user's browser (client-side), **you do not need to add any Pillow layers** or dependencies!
 9. **Set Environment Variables:**
    - Go to the **Configuration** tab -> **Environment variables**.
    - Click **Edit** and add:
@@ -185,10 +183,10 @@ Now we link our frontend to the newly created backend.
 2. The UI should load. Check the browser console (F12) to ensure the API health check passes.
 3. Upload an image using the drag-and-drop interface.
 4. Verify the flow:
-   - The frontend calls `/optimize` to get a presigned URL.
-   - The image is uploaded directly to the S3 Input Bucket.
-   - S3 triggers the ImageProcessorFunction Lambda.
-   - The processed images are saved to the S3 Output Bucket.
-   - The frontend displays links to download the compressed versions!
+   - The frontend resizes the image locally to 1080p, 720p, and 480p.
+   - The frontend calls `/optimize` to get presigned URLs for each resized version.
+   - The smaller, processed images are uploaded directly to the S3 Output structure.
+   - S3 triggers the ImageProcessorFunction Lambda (which now acts just as a lightweight tracking logger).
+   - The frontend immediately displays links to download the compressed versions!
 
 **Congratulations! Your Serverless Cloud-Native Image Compressor is now live.**
